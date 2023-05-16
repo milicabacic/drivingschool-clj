@@ -1,0 +1,5 @@
+{:user "root"
+ :password "Marija1806976!"
+ :subprotocol "mysql"
+ :subname "//localhost:3306/clojure"
+ :zeroDateTimeBehaviour "convertToNull"}

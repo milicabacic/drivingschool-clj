@@ -1,0 +1,6 @@
+{:database-name "clojure"
+ :user-name "root"
+ :password "Marija1806976!"
+ :adapter "mysql"
+ :server-name "localhost"
+ :init-file-name "init.sql"}

@@ -1,4 +1,6 @@
 [
+"DROP DATABASE IF EXISTS `clojure`;"
+
 "CREATE DATABASE IF NOT EXISTS `clojure`;"
 
 "USE `clojure`;"
@@ -41,7 +43,7 @@ DEFAULT CHARACTER SET = utf8;"
    `points` INT NOT NULL,
    PRIMARY KEY (`candidate_id`, `driving_exam_id`, `driving_exam_date`),
    INDEX `fk_driving_exam_idx` (`driving_exam_id` ASC, `driving_exam_date` ASC) VISIBLE,
-   CONSTRAINT `fk_candidate`
+   CONSTRAINT `fk_candidate_de`
      FOREIGN KEY (`candidate_id`)
      REFERENCES `clojure`.`candidates` (`id`)
      ON DELETE CASCADE
@@ -69,7 +71,7 @@ DEFAULT CHARACTER SET = utf8;"
    `points` INT NOT NULL,
    PRIMARY KEY (`candidate_id`, `theory_exam_id`, `theory_exam_date`),
    INDEX `fk_theory_exam_idx` (`theory_exam_id` ASC, `theory_exam_date` ASC) VISIBLE,
-   CONSTRAINT `fk_candidate`
+   CONSTRAINT `fk_candidate_te`
      FOREIGN KEY (`candidate_id`)
      REFERENCES `clojure`.`candidates` (`id`)
      ON DELETE CASCADE

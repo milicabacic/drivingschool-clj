@@ -1,7 +1,6 @@
-(ns drivingschool-clj.core)
-
-(require '[clojure.java.jdbc :as jdbc])
-(require '[clojure.edn :as edn])
+(ns drivingschool-clj.core
+  (:require [clojure.java.jdbc :as jdbc]
+            [clojure.edn :as edn]))
 
 (def db-spec {:dbtype "mysql"
               :dbname "clojure"
@@ -10,96 +9,54 @@
               :user "root"
               :password "Marija1806976!"})
 
-(defn get-connection []
-  (jdbc/get-connection db-spec))
-
-(get-connection)
-
-(def db (edn/read-string (slurp "configuration/init-db.edn")))
-
 (defn create-db-connection []
   (jdbc/db-do-commands
     {:connection-uri (format "jdbc:%s://%s/%s?user=%s&password=%s"
-                             (db :adapter) (db :server-name)
-                             (db :database-name) (db :user-name)
-                             (db :password))}
+                             (db-spec :dbtype) (db-spec :host)
+                             (db-spec :dbname) (db-spec :user)
+                             (db-spec :password))}
     (read-string (slurp (format "src/scripts/%s"
-                                (db :init-file-name))))))
+                                ((edn/read-string (slurp "configuration/init-db.edn")) :init-file-name))))))
 
 (defn init []
-  (jdbc/db-do-commands {:connection-uri (format "jdbc:%s://%s?user=%s&password=%s"
-                                                (db :adapter) (db :server-name)
-                                                (db :user-name) (db :password))}
-                       false
-                       (format "CREATE DATABASE IF NOT EXISTS %s", (db :database-name)))
+  (jdbc/db-do-commands
+    {:connection-uri (format "jdbc:%s://%s?user=%s&password=%s"
+                             (db-spec :dbtype) (db-spec :host)
+                             (db-spec :user) (db-spec :password))}
+    false
+    (format "CREATE DATABASE IF NOT EXISTS %s" (db-spec :dbname)))
   (create-db-connection))
 
 (init)
 
+(defn get-all-candidates []
+  (jdbc/with-db-connection [conn db-spec]
+                           (jdbc/query conn ["SELECT * FROM candidates"])))
 
-(def candidates [{:id 1
-                  :name                          "Milica Bacic"
-                  :age                           23
-                  :first-aid-certificate         true
-                  :theorethical-classes-listened 30
-                  :theorethical-exam-passed      false
-                  :practical-classes-listened    0
-                  :practical-exam-passed         false}
-                 {:id 2
-                  :name                          "Pera Peric"
-                  :age                           27
-                  :first-aid-certificate         false
-                  :theorethical-classes-listened 40
-                  :theorethical-exam-passed      false
-                  :practical-classes-listened    0
-                  :practical-exam-passed         false}
-                 {:id 3
-                  :name                          "Laza Lazic"
-                  :age                           25
-                  :first-aid-certificate         true
-                  :theorethical-classes-listened 40
-                  :theorethical-exam-passed      true
-                  :practical-classes-listened    16
-                  :practical-exam-passed         false}
-                 {:id 4
-                  :name                          "Mika Mikic"
-                  :age                           26
-                  :first-aid-certificate         true
-                  :theorethical-classes-listened 40
-                  :theorethical-exam-passed      true
-                  :practical-classes-listened    40
-                  :practical-exam-passed         false}
-                 {:id                             5
-                  :name                          "Sofija Sofic"
-                  :age                           20
-                  :first-aid-certificate         true
-                  :theorethical-classes-listened 40
-                  :theorethical-exam-passed      true
-                  :practical-classes-listened    40
-                  :practical-exam-passed         true}]
-  )
+(get-all-candidates)
 
-(defn filter-candidates-finished-theory [candidates]
-  (filter #(= (:theorethical-classes-listened %1) 40) candidates))
+(defn finished-theory? [candidates]
+  (filter #(= (:theoretical_classes_listened %1) 40) candidates))
 
-(filter-candidates-finished-theory candidates)
 
-(defn filter-candidates-not-passed-theoretical-exam [candidates]
-  (filter #(= (:theorethical-exam-passed %1) false) candidates))
+(finished-theory? (get-all-candidates))
 
-(filter-candidates-not-passed-theoretical-exam candidates)
+(defn passed_theoretical_exam [candidates]
+  (filter #(= (:theoretical_exam_passed %1) true) candidates))
+
+(passed_theoretical_exam? (get-all-candidates))
 
 (defn make-list-for-theoretical-exam [candidates]
   (filter-candidates-not-passed-theoretical-exam (filter-candidates-finished-theory candidates)))
 
 (make-list-for-theoretical-exam candidates)
 
-(defn filter-candidates-finished-practice [candidates]
-  (filter #(= (:practical-classes-listened %1) 40) candidates))
+(defn finished_practice? [candidates]
+  (filter #(= (:driving_classes_listened %1) 40) candidates))
 
-(filter-candidates-finished-practice candidates)
+(finished_practice? (get-all-candidates))
 
-(defn filter-candidates-not-passed-practical-exam [candidates]
+(defn not_passed_driving_exam [candidates]
   (filter #(= (:practical-exam-passed %1) false) candidates))
 
 (filter-candidates-not-passed-practical-exam candidates)

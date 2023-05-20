@@ -5,5 +5,5 @@
             :url "https://www.eclipse.org/legal/epl-2.0/"}
   :dependencies [[org.clojure/clojure "1.10.1"]
                  [org.clojure/java.jdbc "0.7.12"]
-                 [mysql/mysql-connector-java "8.0.21"]]
+                 [mysql/mysql-connector-java "8.0.26"]]
   :repl-options {:init-ns drivingschool-clj.core})

@@ -1,5 +1,9 @@
-{:user "root"
+{:dbtype "mysql"
+ :dbname "clojure"
+ :user "root"
  :password "Marija1806976!"
+ :host "localhost"
+ :port 3306
  :subprotocol "mysql"
  :subname "//localhost:3306/clojure"
  :zeroDateTimeBehaviour "convertToNull"}

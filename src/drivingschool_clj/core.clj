@@ -1,39 +1,35 @@
 (ns drivingschool-clj.core
-  (:require [clojure.java.jdbc :as jdbc]
+  (:require [service.candidates :as candidates_service]
+            [clojure.java.jdbc :as jdbc]
             [clojure.edn :as edn]))
 
-(def db-spec {:dbtype "mysql"
-              :dbname "clojure"
-              :host "localhost"
-              :port 3306
-              :user "root"
-              :password "Marija1806976!"})
+(def db (edn/read-string (slurp "configuration/db.edn")))
 
 (defn create-db-connection []
   (jdbc/db-do-commands
     {:connection-uri (format "jdbc:%s://%s/%s?user=%s&password=%s"
-                             (db-spec :dbtype) (db-spec :host)
-                             (db-spec :dbname) (db-spec :user)
-                             (db-spec :password))}
+                             (db :dbtype) (db :host)
+                             (db :dbname) (db :user)
+                             (db :password))}
     (read-string (slurp (format "src/scripts/%s"
                                 ((edn/read-string (slurp "configuration/init-db.edn")) :init-file-name))))))
 
 (defn init []
   (jdbc/db-do-commands
     {:connection-uri (format "jdbc:%s://%s?user=%s&password=%s"
-                             (db-spec :dbtype) (db-spec :host)
-                             (db-spec :user) (db-spec :password))}
+                             (db :dbtype) (db :host)
+                             (db :user) (db :password))}
     false
-    (format "CREATE DATABASE IF NOT EXISTS %s" (db-spec :dbname)))
+    (format "CREATE DATABASE IF NOT EXISTS %s" (db :dbname)))
   (create-db-connection))
 
 (init)
 
-(defn get-all-candidates []
-  (jdbc/with-db-connection [conn db-spec]
-                           (jdbc/query conn ["SELECT * FROM candidates"])))
+(let [all-candidates (candidates_service/get-all-candidates)]
+  (doseq [candidate all-candidates]
+    (println candidate)))
 
-(get-all-candidates)
+(candidates_service/get-all-candidates)
 
 (defn finished-theory? [candidates]
   (filter #(= (:theoretical_classes_listened %1) 40) candidates))

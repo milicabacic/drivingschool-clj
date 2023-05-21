@@ -1,7 +1,10 @@
 (ns drivingschool-clj.core
   (:require [service.candidates :as candidates_service]
             [clojure.java.jdbc :as jdbc]
-            [clojure.edn :as edn]))
+            [clojure.edn :as edn]
+            [controller.candidate_controller :as candidate_controller]
+            [ring.adapter.jetty :as jetty]
+            [ring.middleware.defaults :refer [wrap-defaults api-defaults]]))
 
 (def db (edn/read-string (slurp "configuration/db.edn")))
 
@@ -24,6 +27,14 @@
   (create-db-connection))
 
 (init)
+
+(defn -main []
+  (init)
+  (jetty/run-jetty (-> candidate_controller/candidate-routes
+                       (wrap-defaults api-defaults))
+                   {:port 8080}))
+
+(-main)
 
 (let [all-candidates (candidates_service/get-all-candidates)]
   (doseq [candidate all-candidates]
@@ -82,3 +93,5 @@
                            ))
 
 (filter qualified? candidates)
+
+

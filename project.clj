@@ -13,6 +13,8 @@
                  [ring/ring-jetty-adapter "1.10.0"]
                  [cheshire "5.11.0"]
                  [ring/ring-json "0.5.1"]
+                 [uncomplicate/neanderthal "0.40.0"]
+                 [net.mikera/core.matrix "0.62.0"]
                  ]
   :plugins [[lein-ring "0.12.6"]]
   :ring {:handler drivingschool_clj.core/-main

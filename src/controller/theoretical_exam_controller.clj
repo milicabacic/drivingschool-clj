@@ -33,5 +33,5 @@
 
            (DELETE "/theory-exams/:id/:date" [id date]
              (theoretical-exams-service/delete-theory-exam id date)
-             (response/response "Theory exam deleted successfully"))))
+             (response/response "Theory exam deleted successfully")))
 

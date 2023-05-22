@@ -33,5 +33,5 @@
 
            (DELETE "/driving-exams/:id/:date" [id date]
              (driving-exams-service/delete-driving-exam id date)
-             (response/response "Driving exam deleted successfully"))))
+             (response/response "Driving exam deleted successfully")))
 

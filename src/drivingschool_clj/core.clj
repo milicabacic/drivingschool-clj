@@ -2,7 +2,7 @@
   (:require [service.candidates :as candidates_service]
             [clojure.java.jdbc :as jdbc]
             [clojure.edn :as edn]
-            [controller.candidate_controller :as candidate_controller]
+            [controller.candidates_theoretical_exams_controller :as controller]
             [ring.adapter.jetty :as jetty]
             [ring.middleware.defaults :refer [wrap-defaults api-defaults]]
             [ring.middleware.json :as middleware]
@@ -32,11 +32,11 @@
 
 (defn -main []
   (init)
-  (jetty/run-jetty (-> candidate_controller/candidate-routes
+  (jetty/run-jetty (-> controller/candidates-theoretical-exams-routes
                        (middleware/wrap-json-body {:keywords? true :bigdecimals? true})
                        (middleware/wrap-json-response)
                        (wrap-defaults api-defaults))
-                   {:port 8083}))
+                   {:port 8085}))
 
 (-main)
 

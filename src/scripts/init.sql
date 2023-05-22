@@ -88,4 +88,22 @@ DEFAULT CHARACTER SET = utf8;"
 "INSERT INTO `clojure`.`candidates` (`id`, `name`, `age`, `first_aid_certificate`, `theoretical_classes_listened`, `theoretical_exam_passed`, `driving_classes_listened`, `driving_exam_passed`) VALUES ('3', 'Laza Lazic', '22', '1', '40', '1', '16', '0');"
 "INSERT INTO `clojure`.`candidates` (`id`, `name`, `age`, `first_aid_certificate`, `theoretical_classes_listened`, `theoretical_exam_passed`, `driving_classes_listened`, `driving_exam_passed`) VALUES ('4', 'Mika Mikic', '18', '1', '40', '1', '40', '0');"
 "INSERT INTO `clojure`.`candidates` (`id`, `name`, `age`, `first_aid_certificate`, `theoretical_classes_listened`, `theoretical_exam_passed`, `driving_classes_listened`, `driving_exam_passed`) VALUES ('5', 'Sofija Sofic', '20', '1', '40', '1', '40', '1');"
+
+"INSERT INTO `clojure`.`theory_exam` (`id`, `date`, `policeman`) VALUES ('1', '2023-5-18', 'Janko Jankovic');"
+
+
+"INSERT INTO `clojure`.`candidate_theory_exam` (`candidate_id`, `theory_exam_id`, `theory_exam_date`, `points`) VALUES ('1', '1', '2023-5-18', '85');"
+"INSERT INTO `clojure`.`candidate_theory_exam` (`candidate_id`, `theory_exam_id`, `theory_exam_date`, `points`) VALUES ('2', '1', '2023-5-18', '90');"
+"INSERT INTO `clojure`.`candidate_theory_exam` (`candidate_id`, `theory_exam_id`, `theory_exam_date`, `points`) VALUES ('3', '1', '2023-5-18', '92');"
+"INSERT INTO `clojure`.`candidate_theory_exam` (`candidate_id`, `theory_exam_id`, `theory_exam_date`, `points`) VALUES ('4', '1', '2023-5-18', '87');"
+"INSERT INTO `clojure`.`candidate_theory_exam` (`candidate_id`, `theory_exam_id`, `theory_exam_date`, `points`) VALUES ('5', '1', '2023-5-18', '95');"
+
+"INSERT INTO `clojure`.`driving_exam` (`id`, `date`, `policeman`) VALUES ('1', '2023-5-22', 'Petar Mitic');"
+
+"INSERT INTO `clojure`.`candidate_driving_exam` (`candidate_id`, `driving_exam_id`, `driving_exam_date`, `points`) VALUES ('1', '1', '2023-5-22', '80');"
+"INSERT INTO `clojure`.`candidate_driving_exam` (`candidate_id`, `driving_exam_id`, `driving_exam_date`, `points`) VALUES ('2', '1', '2023-5-22', '95');"
+"INSERT INTO `clojure`.`candidate_driving_exam` (`candidate_id`, `driving_exam_id`, `driving_exam_date`, `points`) VALUES ('3', '1', '2023-5-22', '87');"
+"INSERT INTO `clojure`.`candidate_driving_exam` (`candidate_id`, `driving_exam_id`, `driving_exam_date`, `points`) VALUES ('4', '1', '2023-5-22', '20');"
+"INSERT INTO `clojure`.`candidate_driving_exam` (`candidate_id`, `driving_exam_id`, `driving_exam_date`, `points`) VALUES ('5', '1', '2023-5-22', '85');"
+
 ]

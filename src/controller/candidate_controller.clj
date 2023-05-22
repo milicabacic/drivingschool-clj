@@ -1,7 +1,8 @@
 (ns controller.candidate_controller
   (:require [ring.util.response :as response]
             [compojure.core :refer [defroutes GET POST PUT DELETE]]
-            [service.candidates :as candidates-service]))
+            [service.candidates :as candidates-service]
+            [service.machine_learning_prediction :as knn]))
 
 (defn to-json-string [data]
   (clojure.core/pr-str data))
@@ -32,5 +33,12 @@
 
            (DELETE "/candidates/:id" [id]
              (candidates-service/delete-candidate id)
-             (response/response "Candidate deleted successfully")))
+             (response/response "Candidate deleted successfully"))
+
+           (POST "/candidates/predict-points" request
+             (let [json-parsed (:body request)
+                   {:keys [age theory-points driving-exams]} json-parsed
+                   result (service.machine_learning_prediction/predict-with-values age theory-points driving-exams)]
+               (response/response (str "Prediction result: " result))))
+           )
 

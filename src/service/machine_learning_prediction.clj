@@ -13,9 +13,10 @@
         LEFT JOIN candidate_driving_exam d ON (d.candidate_id = c.id)
         GROUP BY c.age"])))
 
-;; Usage
-(def result (get-driving-data))
-(println result)
+(defn convert-data [result]
+  (let [features (map (fn [row] [(row :age) (or (row :max_theory_points) 0) (row :driving_count)]) result)
+        labels (map :max_driving_points result)]
+    {:features features :labels labels}))
 
 (defn euclidean-distance [point1 point2]
   (Math/sqrt (reduce + (map #(* % %) (map - point1 point2)))))
@@ -35,11 +36,12 @@
     predicted-label))
 
 
-(def new-candidate [19 90 0])
+(defn predict-with-values [age theory-points driving-exams]
+  (let [new-candidate [age theory-points driving-exams]
+        k 3
+        dataset (convert-data (get-driving-data))
+        prediction (knn-predict dataset k new-candidate)]
+    prediction))
 
-(def k 3)
 
-(def prediction (knn-predict dataset k new-candidate))
-
-(println prediction)
 

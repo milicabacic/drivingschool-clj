@@ -12,15 +12,6 @@
   (jdbc/query db ["SELECT * FROM candidates WHERE id = ?" id]))
 
 (defn create-candidate [name age first-aid theoretical-classes theoretical-exam driving-classes driving-exam]
-  (println "Received parameters:")
-  (println "Name:" name)
-  (println "Age:" age)
-  (println "First Aid Certificate:" first-aid)
-  (println "Theoretical Classes Listened:" theoretical-classes)
-  (println "Theoretical Exam Passed:" theoretical-exam)
-  (println "Driving Classes Listened:" driving-classes)
-  (println "Driving Exam Passed:" driving-exam)
-
   (jdbc/execute! db
                  ["INSERT INTO candidates (name, age, first_aid_certificate, theoretical_classes_listened, theoretical_exam_passed, driving_classes_listened, driving_exam_passed)
                   VALUES (?, ?, ?, ?, ?, ?, ?)"

@@ -4,7 +4,9 @@
             [clojure.edn :as edn]
             [controller.candidate_controller :as candidate_controller]
             [ring.adapter.jetty :as jetty]
-            [ring.middleware.defaults :refer [wrap-defaults api-defaults]]))
+            [ring.middleware.defaults :refer [wrap-defaults api-defaults]]
+            [ring.middleware.json :as middleware]
+            [cheshire.core :as cheshire]))
 
 (def db (edn/read-string (slurp "configuration/db.edn")))
 
@@ -31,8 +33,10 @@
 (defn -main []
   (init)
   (jetty/run-jetty (-> candidate_controller/candidate-routes
+                       (middleware/wrap-json-body {:keywords? true :bigdecimals? true})
+                       (middleware/wrap-json-response)
                        (wrap-defaults api-defaults))
-                   {:port 8080}))
+                   {:port 8083}))
 
 (-main)
 

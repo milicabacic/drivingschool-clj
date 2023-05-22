@@ -1,7 +1,8 @@
 (ns controller.candidate_controller
   (:require [ring.util.response :as response]
             [compojure.core :refer [defroutes GET POST PUT DELETE]]
-            [service.candidates :as candidates-service]))
+            [service.candidates :as candidates-service]
+            [cheshire.core :as json]))
 
 (defn to-json-string [data]
   (clojure.core/pr-str data))
@@ -16,6 +17,12 @@
              (let [candidate (candidates-service/get-candidate-by-id id)
                    json-string (to-json-string candidate)]
                (response/response json-string)))
+
+           (POST "/candidates" request
+             (let [json-parsed (:body request)]
+               (let [{:keys [name age first-aid theoretical-classes theoretical-exam driving-classes driving-exam]} json-parsed]
+                 (candidates-service/create-candidate name age first-aid theoretical-classes theoretical-exam driving-classes driving-exam)
+                 (response/response "Candidate created successfully"))))
 
            (DELETE "/candidates/:id" [id]
              (candidates-service/delete-candidate id)

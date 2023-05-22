@@ -27,3 +27,4 @@
 
 (defn delete-candidate [id]
   (jdbc/execute! db ["DELETE FROM candidates WHERE id = ?" id]))
+

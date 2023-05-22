@@ -1,6 +1,5 @@
 (ns drivingschool-clj.core
-  (:require [service.candidates :as candidates_service]
-            [clojure.java.jdbc :as jdbc]
+  (:require [clojure.java.jdbc :as jdbc]
             [clojure.edn :as edn]
             [controller.candidate_controller :as candidate-controller]
             [controller.candidates_driving_exams_controller :as candidates_driving_exams_controller]
@@ -9,8 +8,7 @@
             [controller.theoretical_exam_controller :as theory_exam_controller]
             [ring.adapter.jetty :as jetty]
             [ring.middleware.defaults :refer [wrap-defaults api-defaults]]
-            [ring.middleware.json :as middleware]
-            [compojure.route :as route]))
+            [ring.middleware.json :as middleware]))
 
 (def db (edn/read-string (slurp "configuration/db.edn")))
 
@@ -43,6 +41,8 @@
                    {:port 8085}))
 
 (-main)
+
+
 
 
 

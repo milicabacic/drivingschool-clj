@@ -1,14 +1,21 @@
 (ns service.machine_learning_prediction
-  (:require [clojure.string :as str]
-            [clojure.java.io :as io]))
+  (:require [clojure.edn :as edn]
+            [clojure.java.jdbc :as jdbc]))
 
-(def dataset
-  {:features [[18.0 70.0 1.0]
-              [22.0 85.0 3.0]
-              [20.0 75.0 2.0]
-              [25.0 90.0 4.0]
-              [19.0 68.0 1.0]]
-   :labels   [60.0 80.0 70.0 85.0 65.0]})
+(def db (edn/read-string (slurp "configuration/db.edn")))
+
+(defn get-driving-data []
+  (jdbc/with-db-connection [conn db]
+                           (jdbc/query conn
+                                       ["SELECT c.age, max(t.points) AS max_theory_points, COUNT(d.candidate_id) AS driving_count, max(d.points) AS max_driving_points
+        FROM candidates c
+        LEFT JOIN candidate_theory_exam t ON (t.candidate_id = c.id)
+        LEFT JOIN candidate_driving_exam d ON (d.candidate_id = c.id)
+        GROUP BY c.age"])))
+
+;; Usage
+(def result (get-driving-data))
+(println result)
 
 (defn euclidean-distance [point1 point2]
   (Math/sqrt (reduce + (map #(* % %) (map - point1 point2)))))
@@ -19,13 +26,18 @@
         distances (mapv #(euclidean-distance % new-candidate) features)
         sorted-neighbors (sort-by first (map vector distances labels))
         k-neighbors (take k (map second sorted-neighbors))
-        predicted-label (/ (apply + k-neighbors) k)]
+        predicted-label (->> k-neighbors
+                             (frequencies)
+                             (sort-by val)
+                             (reverse)
+                             (first)
+                             (key))]
     predicted-label))
 
 
-(def new-candidate [25 80 2])
+(def new-candidate [19 90 0])
 
-(def k 5)
+(def k 3)
 
 (def prediction (knn-predict dataset k new-candidate))
 
